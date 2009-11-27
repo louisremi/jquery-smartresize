@@ -17,7 +17,7 @@ Simply bind your smartresize event just like a normal resize event. The handler 
 `$(window).bind("smartresize", function( event ) {
 	// Your event handler code goes here.
 	
-`});`
+});`
 
 `// equivalent to...`
 `$(window).smartresize(function( event ) {`
