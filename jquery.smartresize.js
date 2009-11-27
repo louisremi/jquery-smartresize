@@ -1,3 +1,11 @@
+/*!
+ * smartresize: debounced resize event for jQuery
+ *
+ * Copyright (c) 2009 Louis-Rémi Babé
+ * Licensed under the GPL license.
+ * http://docs.jquery.com/License
+ *
+ */
 (function($) {
 
 var event = $.event,
