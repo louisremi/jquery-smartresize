@@ -14,8 +14,8 @@ Binding
 
 Simply bind your smartresize event just like a normal resize event. The handler will be executed only once at the end of the resize event:
 
-`$(window).bind("smartresize", function( event ) {`
-`	// Your event handler code goes here.`
+`$(window).bind("smartresize", function( event ) {
+	// Your event handler code goes here.
 	
 `});`
 
