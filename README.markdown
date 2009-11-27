@@ -3,6 +3,7 @@ Debounced Resize Event for jQuery
 
 It has always been a pain to deal with cross browser issues of the `window`'s resize event.
 According to [PPK](http://www.quirksmode.org/dom/events/resize.html#link1):
+
 *	In IE, Safari, and Chrome many resize events fire as long as the user continues resizing the window.
 *	Opera uses as many resize events, but fires them all at the end of the resizing.
 *	Firefox fires one resize event at the end of the resizing.
