@@ -1,9 +1,11 @@
-/*!
+/*
  * smartresize: debounced resize event for jQuery
  *
- * Copyright (c) 2011 Louis-Rémi Babé
- * Licensed under the GPL license.
- * http://docs.jquery.com/License
+ * latest version and complete README available on Github:
+ * https://github.com/lrbabe/jquery.smartresize.js
+ *
+ * Copyright 2011 @louis_remi
+ * Licensed under the MIT license.
  *
  * This saved you an hour of work? 
  * Send me music http://www.amazon.co.uk/wishlist/HNTU0468LQON
