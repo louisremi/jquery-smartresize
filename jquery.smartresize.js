@@ -1,10 +1,12 @@
 /*!
  * smartresize: debounced resize event for jQuery
  *
- * Copyright (c) 2009 Louis-Rémi Babé
+ * Copyright (c) 2011 Louis-Rémi Babé
  * Licensed under the GPL license.
  * http://docs.jquery.com/License
  *
+ * This saved you an hour of work? 
+ * Send me music http://www.amazon.co.uk/wishlist/HNTU0468LQON
  */
 (function($) {
 
