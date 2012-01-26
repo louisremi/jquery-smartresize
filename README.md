@@ -48,8 +48,8 @@ Minimalist Standalone Version
 Most of the time, I find myself using this plugin just to register a single debulked resize listener on `window`.
 As it turns out, all the features I need actually fit in 91 bytes:
 
-  // debulked onresize handler
-  function on_resize(c,t){onresize=function(){clearTimeout(t);t=setTimeout(c,100)};return c};
+    // debulked onresize handler
+    function on_resize(c,t){onresize=function(){clearTimeout(t);t=setTimeout(c,100)};return c};
 
 Using it is pretty simple:
 
