@@ -53,16 +53,16 @@ As it turns out, all the features I need actually fit in 91 bytes:
 
 Using it is pretty simple:
 
-  on_resize(function() {
-    // handle the resize event here
-    ...
-  });
+    on_resize(function() {
+      // handle the resize event here
+      ...
+    });
 
 Initializing a page (by executing the resize handler when the page loads) couldn't be easier:
 
-  on_resize(function() {
-    ...
-  })(); // these parenthesis does the trick
+    on_resize(function() {
+      ...
+    })(); // these parenthesis does the trick
 
 No files are provided for this function, simply copy/paste it from this README.
 
