@@ -1,51 +1,72 @@
-Debounced Resize Event for jQuery
-=================================
+Debounced and Throttled Resize Events for jQuery
+================================================
 
-It has always been a pain to deal with cross browser issues of the `window`'s resize event.
-According to [PPK](http://www.quirksmode.org/dom/events/resize.html#link1):
+It has always been a pain to deal with cross browser issues of the `window`'s resize event:
 
-*	In IE, Safari, and Chrome many resize events fire as long as the user continues resizing the window.
-*	Opera uses as many resize events, but fires them all at the end of the resizing.
-*	Firefox fires one resize event at the end of the resizing.
+* in IE, many resize events fire as long as the user continues resizing the window,
+* Chrome an Safari behave like IE, but resize events always fire two by two,
+* Firefox used to fire one resize event at the end of the resizing, but now behaves like IE,
+* Opera behaves like IE, but fires resize events at a reduced rate.
 
-Following Paul Irish's [smartresize plugin](http://paulirish.com/2009/throttled-smartresize-jquery-event-handler/),
-here is the smartresize [special event](http://brandonaaron.net/blog/2009/06/4/jquery-edge-new-special-event-hooks)
+This project offers two scripts, each providing a special jQuery event that make `resize` more manageable:
 
-**NEW**: This project also offers a minimalist, standalone (no jQuery dependency), micro function (91 bytes) for your basic resize debulking needs; see below.
+* jquery.debouncedresize.js: adds a special event that fires once after the window has been resized,
+* jquery.throttledresize.js: adds a special event that fires at a reduced rate (no more double events from Chrome and Safari).
 
-Binding
--------
+The [Demo](http://louisremi.github.com/jquery-smartresize/demo/index.html) should help you make your choice.
 
-Simply bind your smartresize event just like a normal resize event. The handler will be executed only once at the end of the resize event:
+** Note to previous users **: jquery.debouncedresize.js is the equivalent of the old jquery.smartresize.js, only the name of the special event changes. 
+Update is not required unless you want to add jquery.throttledresize.js to a page page that already has jquery.smartresize.js.
 
-	$(window).bind("smartresize", function( event ) {
+Binding / Unbinding
+-------------------
+
+Simply bind your special event just like a normal resize event.
+
+	$(window).on("debouncedresize", function( event ) {
 		// Your event handler code goes here.
 	});
 
-	// equivalent to...
-	$(window).smartresize(function( event ) {
-		// Your event handler code goes here.
-	
-	});
-
-Trigger
--------
-
-To trigger the smartresize event and cancel the debulk timeout (100ms), use the following snippet:
-
-	$(window).smartresize();
 	// or...
-	$(window).trigger("smartresize", ["execAsap"]);
+	$(window).on("throttledresize", function( event ) {
+		// Your event handler code goes here.
+	});
 
-Event API
+	// unbind at will
+	$(window).off( "debouncedresize" );
+
+Threshold
 ---------
 
-Since smartresize is implemented as a special event, it is actually possible to use all usual methods of [jQuery's event API](http://docs.jquery.com/Events).
+Both special events have a `.threshold` option:
+
+* in jquery.debouncedresize.js, it defines the interval used to determine if two `resize` events are part of the same `debouncedresize` event. **Defaults to 150 (milliseconds)**
+* in jquery.throttledresize.js, it defines the number of animation ticks (or frames) between each `throttledresize` event. **Defaults to 0 (tick)**, which means that it's going to fire at a maximum of 60fps.
+
+They can be modified globally once the script has been loaded:
+
+    // increase the threshold to 250ms
+    $.event.special.debouncedresize.threshold = 250;
+
+    // decrease the firing rate to a maximum of 30fps
+    $.event.special.throttledresize.threshold = 1;
+    // 2 <=> 20fps, 3 <=> 15fps, ...
+
+(Synchronous) Trigger
+---------------------
+
+Triggering those events is achieved using jQuery's standard API:
+
+	$(window).trigger( "debouncedresize" );
+
+It's also possible to execute the handler of any listener synchronously (without the delays):
+
+	$(window).trigger( "throttledresize", [true] );
 
 Minimalist Standalone Version
 =============================
 
-Most of the time, I find myself using this plugin just to register a single debulked resize listener on `window`.
+Most of the time, I find myself using `debouncedresize` just to register a single listener on `window`.
 As it turns out, all the features I need actually fit in 91 bytes:
 
     // debulked onresize handler

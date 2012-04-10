@@ -1,1 +1,272 @@
-<!DOCTYPE HTML><html lang="en-US"><head>	<title>smartresize demonstration</title>	<meta charset="UTF-8">	<style type="text/css">		textarea { float: left; width: 400px; height: 200px; font-size: 8px;}	</style></head><body>	<h2>View this page with a non-Firefox browser (IE, Safari, or Chrome) and resize the browser window</h2>	<textarea id="allhits">All resize events:</textarea>	<textarea id="debouncedhits">Debounced resize events:</textarea>	<br />	<br />	<br />	<br />	<br />	<br />	<br />	<br />	<br />	<br />	<br />	<br />	<p>With kind permission from <a href="http://paulirish.com/">Paul Irish</a>.</p>	<script type="text/javascript" src="jquery.js"></script>	<script type="text/javascript" src="../jquery.smartresize.js"></script>	<script type="text/javascript">		$(function() {			$(window).resize(function(){				$('#allhits').html( $('#allhits').html() + '\n event fired:'+ new Date() );			});			$(window).bind("smartresize", function(){				$('#debouncedhits').html( $('#debouncedhits').html() + '\n event fired:'+ new Date() );			});		});	</script></body></html>
+<!DOCTYPE html>
+<html>
+<head>
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<link rel="stylesheet" href="http://code.jquery.com/qunit/git/qunit.css" type="text/css" media="screen" />
+<script type="text/javascript" src="http://code.jquery.com/qunit/git/qunit.js"></script>
+
+<script src="../jquery.throttledresize.js"></script>
+<script src="../jquery.debouncedresize.js"></script>
+</head>
+<body>
+	<h1 id="qunit-header">Tests for <code>debouncedresize</code> and <code>throttledresize</code> special jQuery events</i></h1>
+	<h2 id="qunit-banner"></h2>
+	<div id="qunit-testrunner-toolbar"></div>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="qunit-fixture">test markup, will be hidden</div>
+
+<script>
+$(function() {
+
+var $window = $( window ),
+	data = {test: true},
+	dbnCount1 = 0,
+	dbnCount2 = 0,
+	dbnCount3 = 0,
+	thrCount1 = 0,
+	thrCount2 = 0,
+	thrCount3 = 0,
+	dbnCb1 = function() {
+		dbnCount1++;
+	},
+	dbnCb2 = function() {
+		dbnCount2++;
+	},
+	dbnCb3 = function() {
+		dbnCount3++;
+	},
+	thrCb1 = function() {
+		thrCount1++;
+	},
+	thrCb2 = function() {
+		thrCount2++;
+	},
+	thrCb3 = function() {
+		thrCount3++;
+	};
+
+module( "debouncedresize" );
+
+$window.on( "debouncedresize", dbnCb1 );
+
+$window.on( "debouncedresize", dbnCb2 );
+
+$window.on( "debouncedresize", dbnCb3 );
+
+test("binding multiple listeners", function() {
+	stop();
+
+	$window.trigger( "debouncedresize" );
+
+	setTimeout(function() {
+		equal( dbnCount1, 1, "callback of first listener was executed" );
+		equal( dbnCount2, 1, "callback of second listener was executed" );
+		equal( dbnCount3, 1, "callback of third listener was executed" );
+
+		start();
+
+	}, 250);
+});
+
+test("unbinding one listener", function() {
+	stop();
+
+	$window.off( "debouncedresize", dbnCb2 );
+
+	$window.trigger( "debouncedresize" );
+
+	setTimeout(function() {
+		equal( dbnCount1, 2, "callback of first listener was executed" );
+		equal( dbnCount2, 1, "second listener was unbound" );
+		equal( dbnCount3, 2, "callback of third listener was executed" );
+
+		start();
+
+	}, 250);
+});
+
+test("unbinding all listeners", function() {
+	stop();
+
+	$window.off( "debouncedresize" );
+
+	$window.trigger( "debouncedresize" );
+
+	setTimeout(function() {
+		equal( dbnCount1, 2, "first listener was unbound" );
+		equal( dbnCount3, 2, "third listener was unbound" );
+
+		start();
+
+	}, 250);
+});
+
+test("event data", function() {
+	stop();
+
+	$window.on( "debouncedresize", data, function( e ) {
+		ok( e.data.test, "event data can be accessed from callback" );
+
+		$window.off( "debouncedresize" );
+
+		start();
+	});
+
+	$window.trigger( "debouncedresize" );
+});
+
+test("synchronous execution of callback", function() {
+	dbnCount1 = 0;
+
+	$window.on( "debouncedresize", dbnCb1 );
+
+	$window.trigger( "debouncedresize", [true] );
+
+	equal( dbnCount1, 1, "callback is executed synchronously" );
+
+	$window.off( "debouncedresize" );
+});
+
+test("resize is actually debounced", function() {
+	stop();
+
+	dbnCount1 = 0;
+	var rszCount = 0,
+		interval;
+
+	$window.on( "debouncedresize", dbnCb1 );
+
+	interval = setInterval(function() {
+		$window.trigger("resize");
+		
+		++rszCount == 10 && clearInterval( interval );
+	}, 30);
+
+	setTimeout(function() {
+		equal( dbnCount1, 1, "Only one debouncedresize event was dispatched" );
+
+		$window.off( "debouncedresize" );
+
+		start();
+	}, 600);
+});
+
+module( "throttledresize" );
+
+test("binding multiple listeners", function() {
+	stop();
+
+	$window.on( "throttledresize", thrCb1 );
+
+	$window.on( "throttledresize", thrCb2 );
+
+	$window.on( "throttledresize", thrCb3 );
+
+	$window.trigger( "throttledresize" );
+
+	setTimeout(function() {
+		equal( thrCount1, 1, "callback of first listener was executed" );
+		equal( thrCount2, 1, "callback of second listener was executed" );
+		equal( thrCount3, 1, "callback of third listener was executed" );
+
+		start();
+
+	}, 250);
+});
+
+test("unbinding one listener", function() {
+	stop();
+
+	$window.off( "throttledresize", thrCb2 );
+
+	$window.trigger( "throttledresize" );
+
+	setTimeout(function() {
+		equal( thrCount1, 2, "callback of first listener was executed" );
+		equal( thrCount2, 1, "second listener was unbound" );
+		equal( thrCount3, 2, "callback of third listener was executed" );
+
+		start();
+
+	}, 250);
+});
+
+test("unbinding all listeners", function() {
+	stop();
+
+	$window.off( "throttledresize" );
+
+	$window.trigger( "throttledresize" );
+
+	setTimeout(function() {
+		equal( thrCount1, 2, "first listener was unbound" );
+		equal( thrCount3, 2, "third listener was unbound" );
+
+		start();
+
+	}, 250);
+});
+
+test("event data", function() {
+	stop();
+
+	$window.on( "throttledresize", data, function( e ) {
+		ok( e.data.test, "event data can be accessed from callback" );
+
+		$window.off( "throttledresize" );
+
+		start();
+	});
+
+	$window.trigger( "throttledresize" );
+});
+
+test("synchronous execution of callback", function() {
+	thrCount1 = 0;
+
+	$window.on( "throttledresize", thrCb1 );
+
+	$window.trigger( "throttledresize", [true] );
+
+	equal( thrCount1, 1, "callback is executed synchronously" );
+
+	$window.off( "throttledresize" );
+});
+
+test("resize is actually throttled", function() {
+	stop();
+
+	thrCount1 = 0;
+	var interval,
+		frameCount = 0;
+
+	$window.on( "throttledresize", thrCb1 );
+
+	$window.trigger( "resize" );
+
+	interval = setInterval(function() {
+		$window.trigger( "resize" );
+		$window.trigger( "resize" );
+	}, 8);
+
+	$({_:1}).animate({_:0}, {
+		duration: 600,
+		step: function() {
+			frameCount++;
+		},
+		complete: function() {
+			equal( thrCount1, frameCount, "there has been as much throttledresize events as animation frames" );
+
+			clearInterval( interval );
+
+			start();
+		}
+	});
+});
+
+});
+</script>
+
+</body>
+</html>
