@@ -10,12 +10,12 @@ It has always been a pain to deal with cross browser issues of the `window`'s re
 
 This project offers two scripts, each providing a special jQuery event that make `resize` more manageable:
 
-* jquery.debouncedresize.js: adds a special event that fires once after the window has been resized,
-* jquery.throttledresize.js: adds a special event that fires at a reduced rate (no more double events from Chrome and Safari).
+* **jquery.debouncedresize.js**: adds a special event that fires once after the window has been resized,
+* **jquery.throttledresize.js**: adds a special event that fires at a reduced rate (no more double events from Chrome and Safari).
 
 The [Demo](http://louisremi.github.com/jquery-smartresize/demo/index.html) should help you make your choice.
 
-** Note to previous users **: jquery.debouncedresize.js is the equivalent of the old jquery.smartresize.js, only the name of the special event changes. 
+**Note to previous users**: jquery.debouncedresize.js is the equivalent of the old jquery.smartresize.js, only the name of the special event changes. 
 Update is not required unless you want to add jquery.throttledresize.js to a page page that already has jquery.smartresize.js.
 
 Binding / Unbinding
