@@ -32,25 +32,25 @@ $special = $event.special.throttledresize = {
 
 		wasResized = true;
 
-        if ( !animRunning ) {
-        	$(dummy).animate(dummy, { duration: Infinity, step: function() {
-	        	frame++;
+		if ( !animRunning ) {
+			setInterval(function(){
+				frame++;
 
-	        	if ( frame > $special.threshold && wasResized || execAsap ) {
-	        		// set correct event type
-        			event.type = "throttledresize";
-	        		$event.dispatch.apply( context, args );
-	        		wasResized = false;
-	        		frame = 0;
-	        	}
-	        	if ( frame > 9 ) {
-	        		$(dummy).stop();
-	        		animRunning = false;
-	        		frame = 0;
-	        	}
-	        }});
-	        animRunning = true;
-        }
+				if ( frame > $special.threshold && wasResized || execAsap ) {
+					// set correct event type
+					event.type = "throttledresize";
+					$event.dispatch.apply( context, args );
+					wasResized = false;
+					frame = 0;
+				}
+				if ( frame > 9 ) {
+					$(dummy).stop();
+					animRunning = false;
+					frame = 0;
+				}
+			}, 30);
+			animRunning = true;
+		}
 	},
 	threshold: 0
 };
